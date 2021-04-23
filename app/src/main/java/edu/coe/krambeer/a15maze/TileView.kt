@@ -55,11 +55,6 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
         val touchX = event!!.x
         val touchY = event.y
 
-        if(event.action == MotionEvent.ACTION_UP){
-            //directionSet = false
-            return true
-        }
-
         if(!view.tile.isClickInBounds(touchX, touchY))
             return false
 
@@ -68,38 +63,82 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
             touchOffsetY = touchY - prevY
         }
         else if(event.action == MotionEvent.ACTION_MOVE){
-            if(!directionSet){
-                moveXFlag = abs(touchX - prevX) > abs(touchY - prevY)
-                directionSet = true
+            val newX = touchX - touchOffsetX
+            val newY = touchY - touchOffsetY
+            view.tile.setX(view.tile.boundedX(newX))
+            view.tile.setY(view.tile.boundedY(newY))
+            for(oTile in otherTiles){
+                if(oTile.isCollision(this))
+                    colFlag = true
             }
-            if(moveXFlag){
-                val newX = touchX - touchOffsetX
-                view.tile.setX(view.tile.boundedX(newX))
-//                for(oTile in otherTiles){
-//                    if(oTile.isCollision(this))
-//                        colFlag = true
-//                }
-                if(colFlag)
-                    view.tile.setX(view.tile.boundedX(prevX))
-                else
-                    prevX = newX
+            if(colFlag){
+                view.tile.setX(view.tile.boundedX(prevX))
+                view.tile.setY(view.tile.boundedY(prevY))
             }
             else{
-                val newY = touchY - touchOffsetY
-                view.tile.setY(view.tile.boundedY(newY))
-//                for(oTile in otherTiles){
-//                    if(oTile.isCollision(this))
-//                        colFlag = true
-//                }
-                if(colFlag)
-                    view.tile.setY(view.tile.boundedY(prevY))
-                else
-                    prevY = newY
+                prevX = newX
+                prevY = newY
             }
         }
 
         view.invalidate()
         return true
+    }
+
+//    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//        val view = v as TileView
+//        val touchX = event!!.x
+//        val touchY = event.y
+//
+//        if(event.action == MotionEvent.ACTION_UP){
+//            //directionSet = false
+//            return true
+//        }
+//
+//        if(!view.tile.isClickInBounds(touchX, touchY))
+//            return false
+//
+//        if(event.action == MotionEvent.ACTION_DOWN){
+//            touchOffsetX = touchX - prevX
+//            touchOffsetY = touchY - prevY
+//        }
+//        else if(event.action == MotionEvent.ACTION_MOVE){
+//            if(!directionSet){
+//                moveXFlag = abs(touchX - prevX) > abs(touchY - prevY)
+//                directionSet = true
+//            }
+//            if(moveXFlag){
+//                val newX = touchX - touchOffsetX
+//                view.tile.setX(view.tile.boundedX(newX))
+//                for(oTile in otherTiles){
+//                    if(oTile.isCollision(this))
+//                        colFlag = true
+//                }
+//                if(colFlag)
+//                    view.tile.setX(view.tile.boundedX(prevX))
+//                else
+//                    prevX = newX
+//            }
+//            else{
+//                val newY = touchY - touchOffsetY
+//                view.tile.setY(view.tile.boundedY(newY))
+//                for(oTile in otherTiles){
+//                    if(oTile.isCollision(this))
+//                        colFlag = true
+//                }
+//                if(colFlag)
+//                    view.tile.setY(view.tile.boundedY(prevY))
+//                else
+//                    prevY = newY
+//            }
+//        }
+//
+//        view.invalidate()
+//        return true
+//    }
+
+    private fun snapToNearestSquare(){
+
     }
 
     private fun isCollision(movingTile: TileView):Boolean{
@@ -122,4 +161,5 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
     fun addOtherTile(tile: TileView){
         otherTiles.add(tile)
     }
+
 }
