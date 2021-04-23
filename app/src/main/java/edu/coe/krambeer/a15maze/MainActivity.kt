@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         width = container.size
         height = container.size
 
-        val tileSize = 270f
+        val tileSize = 270f     //270f is closest fit
 
         for(i in 0..14){
             val testTile = Tile(0f + (i%4) * tileSize, 0f + (i/4) * tileSize, tileSize, i + 1)
