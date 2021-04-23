@@ -1,8 +1,8 @@
 package edu.coe.krambeer.a15maze
 
 class Tile(xInit: Float, yInit: Float, sizeInit: Float, numberInit: Int) {
-    private var x = xInit //bottom left corner
-    private var y = yInit //bottom left corner
+    private var x = xInit //upper left corner x
+    private var y = yInit //upper left corner y
     private var minX = 0
     private var maxX = 0
     private var minY = 0
@@ -55,5 +55,11 @@ class Tile(xInit: Float, yInit: Float, sizeInit: Float, numberInit: Int) {
             return maxY - size
         else
             return yVal
+    }
+
+    fun isClickInBounds(xClick:Float, yClick:Float):Boolean{
+        if(xClick < x || xClick > x + size || yClick < y || yClick > y + size)
+            return false
+        return true
     }
 }

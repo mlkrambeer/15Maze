@@ -14,12 +14,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/newGame"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="46dp"
         android:layout_marginLeft="46dp"
         android:layout_marginBottom="63dp"
-        android:text="@string/start"
+        android:text="@string/new_game"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
