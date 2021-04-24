@@ -27,6 +27,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
     private val otherTiles: ArrayList<TileView> = ArrayList()
 
+    private lateinit var activity: TileViewListener
+
     init{
         setOnTouchListener(this)
         prevX = tile.getX()
@@ -38,6 +40,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         super.onDraw(canvas)
 
         painter.color = Color.BLACK
+        if(isCorrectSpot())
+            painter.color = Color.RED
         painter.style = Paint.Style.STROKE
         painter.strokeWidth = 15f
         val left = tile.getX()
@@ -176,6 +180,7 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         view.setXCoord(snapXCord)
         view.setYCoord(snapYCord)
         view.invalidate()
+        tellListener()
     }
 
     private fun moveDirection():Boolean{ //true = X, false = Y
@@ -240,5 +245,21 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
     fun setYCoord(newY:Int){
         yCord = newY
+    }
+
+    fun isCorrectSpot():Boolean{
+        if(!(xCord == (tile.getNumber() - 1) % 4))
+            return false
+        if(!(yCord == (tile.getNumber() - 1) / 4))
+            return false
+        return true
+    }
+
+    fun addListener(l: TileViewListener){
+        activity = l
+    }
+
+    fun tellListener(){
+        activity.checkWinCondition()
     }
 }
