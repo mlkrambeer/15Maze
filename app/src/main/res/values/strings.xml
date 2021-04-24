@@ -2,4 +2,5 @@
     <string name="app_name">15Maze</string>
     <string name="start">START</string>
     <string name="new_game">NEW GAME</string>
+    <string name="fix_tiles">FIX TILES</string>
 </resources>

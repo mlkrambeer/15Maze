@@ -12,7 +12,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class TileView(context: Context?, private val tile: Tile): View(context), View.OnTouchListener {
+class TileView(context: Context?, private val tile: Tile, private var xCord: Int, var yCord: Int): View(context), View.OnTouchListener {
 
     private val painter = Paint()
     private var touchOffsetX = 0f
@@ -39,7 +39,7 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
 
         painter.color = Color.BLACK
         painter.style = Paint.Style.STROKE
-        painter.strokeWidth = 20f
+        painter.strokeWidth = 15f
         val left = tile.getX()
         val right = tile.getX() + tile.getSize()
         val top = tile.getY()
@@ -53,6 +53,7 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
 
     }
 
+    //this one allows movement of both x and y cords at once
 //    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 //        val view = v as TileView
 //        val touchX = event!!.x
@@ -93,6 +94,7 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
 //        return true
 //    }
 
+    //this one only allows changing one of x or y coords at a time
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         val view = v as TileView
         val touchX = event!!.x
@@ -113,7 +115,7 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
         }
         else if(event.action == MotionEvent.ACTION_MOVE){
             if(!directionSet){
-                moveXFlag = abs(touchX - prevX) > abs(touchY - prevY)
+                moveXFlag = !moveDirection()
                 directionSet = true
             }
             if(moveXFlag){
@@ -146,24 +148,43 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
         return true
     }
 
-    private fun snapToNearestSquare(view: TileView){
+    fun snapToNearestSquare(view: TileView){
+        val spacing = 20f
+
         var minDist = Float.MAX_VALUE
         var snapX = 0f
         var snapY = 0f
+        var snapXCord = 0
+        var snapYCord = 0
+
         for(i in 0..15){
-            val xSpot = 0f + (i%4) * view.tile.getSize()
-            val ySpot = 0f + (i/4) * view.tile.getSize()
+            val xSpot = (i%4) * (view.tile.getSize() + spacing)
+            val ySpot = (i/4) * (view.tile.getSize() + spacing)
             val dist = sqrt((view.getPrevX() - xSpot).toDouble().pow(2.0) + (view.getPrevY() - ySpot).toDouble().pow(2.0))
             if(dist < minDist){
                 minDist = dist.toFloat()
                 snapX = xSpot
                 snapY = ySpot
+                snapXCord = (i%4)
+                snapYCord = i/4
             }
         }
         view.tile.setX(view.tile.boundedX(snapX))
         view.tile.setY(view.tile.boundedY(snapY))
         view.setPrevX(snapX)
         view.setPrevY(snapY)
+        view.setXCoord(snapXCord)
+        view.setYCoord(snapYCord)
+        view.invalidate()
+    }
+
+    private fun moveDirection():Boolean{ //true = X, false = Y
+        var sumX = 0
+        for(oTile in otherTiles){
+            if(xCord == oTile.getXCoord())
+                sumX++
+        }
+        return sumX < 3
     }
 
     private fun isCollision(movingTile: TileView):Boolean{
@@ -203,5 +224,21 @@ class TileView(context: Context?, private val tile: Tile): View(context), View.O
 
     fun setPrevY(newY:Float){
         prevY = newY
+    }
+
+    fun getXCoord():Int{
+        return xCord
+    }
+
+    fun getYCoord():Int{
+        return yCord
+    }
+
+    fun setXCoord(newX:Int){
+        xCord = newX
+    }
+
+    fun setYCoord(newY:Int){
+        yCord = newY
     }
 }
