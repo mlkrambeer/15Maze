@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity(), TileViewListener {
     private var height = 0
     lateinit var container: ConstraintLayout
     lateinit var newGameButton: Button
-    lateinit var fixButton: Button
     lateinit var winText: TextView
     private var randomOrder: Array<Int> = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
     private var blankLocation = 15
@@ -29,9 +28,6 @@ class MainActivity : AppCompatActivity(), TileViewListener {
 
         newGameButton = findViewById(R.id.newGame)
         newGameButton.setOnClickListener{ newGame() }
-
-        fixButton = findViewById(R.id.fix)
-        fixButton.setOnClickListener { fixTiles() }
 
         winText = findViewById(R.id.winText)
     }
@@ -73,9 +69,29 @@ class MainActivity : AppCompatActivity(), TileViewListener {
         }
     }
 
+    //tiles used to clip into each other and get stuck; fixed for now, but I'm keeping this code around
     private fun fixTiles(){
+        val newAllTiles: ArrayList<TileView> = ArrayList()
         for(tile in allTiles){
-            tile.snapToNearestSquare(tile)
+            val x = tile.getXCoord()
+            val y = tile.getYCoord()
+            val tileObj = tile.getTile()
+            val copy = TileView(this, tileObj, x, y)
+            copy.addListener(this)
+            container.removeView(tile)
+            container.addView(copy)
+
+            newAllTiles.add(copy)
+        }
+
+        allTiles = newAllTiles
+
+        for(tile1 in allTiles){
+            for(tile2 in allTiles){
+                if(tile1 == tile2)
+                    continue
+                tile1.addOtherTile(tile2)
+            }
         }
     }
 
@@ -121,4 +137,6 @@ class MainActivity : AppCompatActivity(), TileViewListener {
         if(win)
             winText.text = "You Win!"
     }
+
+
 }

@@ -103,6 +103,7 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         val view = v as TileView
         val touchX = event!!.x
         val touchY = event.y
+        colFlag = false
 
         if(event.action == MotionEvent.ACTION_UP){
             directionSet = false
@@ -154,6 +155,7 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
     fun snapToNearestSquare(view: TileView){
         val spacing = 20f
+        val offset = 7f
 
         var minDist = Float.MAX_VALUE
         var snapX = 0f
@@ -162,8 +164,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         var snapYCord = 0
 
         for(i in 0..15){
-            val xSpot = (i%4) * (view.tile.getSize() + spacing)
-            val ySpot = (i/4) * (view.tile.getSize() + spacing)
+            val xSpot = (i%4) * (view.tile.getSize() + spacing) + offset
+            val ySpot = (i/4) * (view.tile.getSize() + spacing) + offset
             val dist = sqrt((view.getPrevX() - xSpot).toDouble().pow(2.0) + (view.getPrevY() - ySpot).toDouble().pow(2.0))
             if(dist < minDist){
                 minDist = dist.toFloat()
@@ -261,5 +263,9 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
     fun tellListener(){
         activity.checkWinCondition()
+    }
+
+    fun getTile():Tile{
+        return tile
     }
 }
