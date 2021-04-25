@@ -3,4 +3,7 @@
     <string name="start">START</string>
     <string name="new_game">NEW GAME</string>
     <string name="fix_tiles">FIX TILES</string>
+    <string name="numbers">Numbers</string>
+    <string name="image">Image</string>
+    <string name="new_game2">New Game</string>
 </resources>

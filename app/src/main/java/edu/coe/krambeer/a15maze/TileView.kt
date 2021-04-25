@@ -57,48 +57,7 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
     }
 
-    //this one allows movement of both x and y cords at once
-//    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-//        val view = v as TileView
-//        val touchX = event!!.x
-//        val touchY = event.y
-//
-//        if(event.action == MotionEvent.ACTION_UP){
-//            snapToNearestSquare(view)
-//            return true
-//        }
-//
-//        if(!view.tile.isClickInBounds(touchX, touchY))
-//            return false
-//
-//        if(event.action == MotionEvent.ACTION_DOWN){
-//            touchOffsetX = touchX - prevX
-//            touchOffsetY = touchY - prevY
-//        }
-//        else if(event.action == MotionEvent.ACTION_MOVE){
-//            val newX = touchX - touchOffsetX
-//            val newY = touchY - touchOffsetY
-//            view.tile.setX(view.tile.boundedX(newX))
-//            view.tile.setY(view.tile.boundedY(newY))
-//            for(oTile in otherTiles){
-//                if(oTile.isCollision(this))
-//                    colFlag = true
-//            }
-//            if(colFlag){
-//                view.tile.setX(view.tile.boundedX(prevX))
-//                view.tile.setY(view.tile.boundedY(prevY))
-//            }
-//            else{
-//                prevX = newX
-//                prevY = newY
-//            }
-//        }
-//
-//        view.invalidate()
-//        return true
-//    }
-
-    //this one only allows changing one of x or y coords at a time
+    //this only allows changing one of x or y coords at a time
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         val view = v as TileView
         val touchX = event!!.x

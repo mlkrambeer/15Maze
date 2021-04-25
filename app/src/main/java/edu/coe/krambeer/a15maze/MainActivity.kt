@@ -5,31 +5,83 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.size
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), TileViewListener {
+class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListener {
     private var width = 0
     private var height = 0
-    lateinit var container: ConstraintLayout
+    lateinit var container: FrameLayout
     lateinit var newGameButton: Button
     lateinit var winText: TextView
+    lateinit var radioButtons: RadioGroup
     private var randomOrder: Array<Int> = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
     private var blankLocation = 15
 
     private var allTiles: ArrayList<TileView> = ArrayList()
+    private var allImageTiles: ArrayList<ImageTileView> = ArrayList()
+
+    private var gameDone = false
+
+    private var picture: Int = R.drawable.dogecoin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         newGameButton = findViewById(R.id.newGame)
-        newGameButton.setOnClickListener{ newGame() }
+        newGameButton.setOnClickListener{ gameSelector() }
 
         winText = findViewById(R.id.winText)
+
+        radioButtons = findViewById(R.id.tileType)
+    }
+
+    private fun gameSelector(){
+        val selection = radioButtons.checkedRadioButtonId
+        if(selection == R.id.numbers)
+            newGame()
+        else
+            imageGame()
+    }
+
+    private fun imageGame(){
+        gameDone = false
+        getValidRandomOrder()
+        winText.text = ""
+        container = findViewById(R.id.container)
+        container.removeAllViews()
+        allImageTiles = ArrayList()
+
+        val tileSize = 270
+
+        for(i in 0..15){
+            if(randomOrder[i] == 16)
+                continue
+
+            val tileView = ImageTileView(this, picture, (i%4), i/4, randomOrder[i], i)
+            tileView.addListener(this)
+            val params = FrameLayout.LayoutParams(tileSize, tileSize)
+            params.leftMargin = (i%4) * tileSize
+            params.topMargin = (i/4) * tileSize
+            container.addView(tileView, params)
+
+            allImageTiles.add(tileView)
+        }
+
+        for(tile1 in allImageTiles){
+            for(tile2 in allImageTiles){
+                if(tile1 == tile2)
+                    continue
+                tile1.addOtherTile(tile2)
+            }
+        }
     }
 
     private fun newGame(){
@@ -70,7 +122,7 @@ class MainActivity : AppCompatActivity(), TileViewListener {
     }
 
     //tiles used to clip into each other and get stuck; fixed for now, but I'm keeping this code around
-    private fun fixTiles(){
+    private fun fixTiles(){  //delete and re-create all tiles
         val newAllTiles: ArrayList<TileView> = ArrayList()
         for(tile in allTiles){
             val x = tile.getXCoord()
@@ -128,7 +180,7 @@ class MainActivity : AppCompatActivity(), TileViewListener {
         randomOrder[index2] = temp
     }
 
-    override fun checkWinCondition() {
+    override fun checkWinCondition(){
         var win = true
         for(tile in allTiles){
             if(!tile.isCorrectSpot())
@@ -138,5 +190,34 @@ class MainActivity : AppCompatActivity(), TileViewListener {
             winText.text = "You Win!"
     }
 
+    override fun checkImageWinCondition() {
+        if(gameDone)
+            return
+        var win = true
+        for(tile in allImageTiles){
+            if(!(tile.isCorrectSpot()))
+                win = false
+        }
+        if(win){
+            gameDone = true
+            winText.text = "You Win!"
 
+            val tileView = ImageTileView(this, picture, 3, 3, 16, 16)
+            tileView.addListener(this)
+            val params = FrameLayout.LayoutParams(270, 270)
+            params.leftMargin = 3 * 270
+            params.topMargin = 3 * 270
+            container.addView(tileView, params)
+
+            allImageTiles.add(tileView)
+
+            for(tile1 in allImageTiles){
+                for(tile2 in allImageTiles){
+                    if(tile1 == tile2)
+                        continue
+                    tile1.addOtherTile(tile2)
+                }
+            }
+        }
+    }
 }
