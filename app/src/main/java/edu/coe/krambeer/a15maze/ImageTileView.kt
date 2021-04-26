@@ -47,9 +47,14 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         setOnTouchListener(this)
         val image = getDrawable(resources, picture, resources.newTheme())!!
         val bitmap = (image as BitmapDrawable).bitmap
-        val tileWidth = bitmap.width / 4
-        val tileHeight = bitmap.height / 4
-        val cropped = Bitmap.createBitmap(bitmap, ((number - 1) % 4) * tileWidth, ((number - 1) / 4) * tileHeight, tileWidth, tileHeight)
+        val imageWidth = bitmap.width / 4
+        val imageHeight = bitmap.height / 4
+        var tileSize = 0
+        if(imageWidth < imageHeight)  //check which of the two is smaller, and use that for both dimensions; this will crop longer dimension
+            tileSize = imageWidth
+        else
+            tileSize = imageHeight
+        val cropped = Bitmap.createBitmap(bitmap, ((number - 1) % 4) * tileSize, ((number - 1) / 4) * tileSize, tileSize, tileSize)
         setImageBitmap(cropped)
 
         prevX = (startLoc % 4) * displaySize
@@ -84,7 +89,6 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
             if(moveXFlag){
                 val newX = touchX - touchOffsetX
                 view.x = boundedX(newX)
-//                view.x = newX
                 for(oTile in otherTiles){
                     if(oTile.isCollision(this))
                         colFlag = true
@@ -97,7 +101,6 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
             else{
                 val newY = touchY - touchOffsetY
                 view.y = boundedY(newY)
-//                view.y = newY
                 for(oTile in otherTiles){
                     if(oTile.isCollision(this))
                         colFlag = true
@@ -135,9 +138,6 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
 
         view.setCurrentX(view.boundedX(snapX))
         view.setCurrentY(view.boundedY(snapY))
-//        view.setCurrentX(snapX)
-//        view.setCurrentY(snapY)
-
         view.setPrevX(snapX)
         view.setPrevY(snapY)
         view.setXCoord(snapXCord)

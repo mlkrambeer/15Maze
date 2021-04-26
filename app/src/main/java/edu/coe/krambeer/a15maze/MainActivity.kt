@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
 
     private var gameDone = false
 
-    private var picture: Int = R.drawable.illusion
+    private var picture: Int = R.drawable.gingkotree
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
