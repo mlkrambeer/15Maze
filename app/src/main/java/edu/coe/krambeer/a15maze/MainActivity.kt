@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.size
 import java.util.*
@@ -21,6 +19,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     lateinit var newGameButton: Button
     lateinit var winText: TextView
     lateinit var radioButtons: RadioGroup
+    lateinit var randomSwitch: SwitchCompat
     private var randomOrder: Array<Int> = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
     private var blankLocation = 15
 
@@ -29,7 +28,12 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
 
     private var gameDone = false
 
+    private var enableRandomPicture = true
     private var picture: Int = R.drawable.gingkotree
+    private val allPictures: Array<Int> = arrayOf(R.drawable.animals, R.drawable.babby, R.drawable.chef,
+                                                  R.drawable.criticalmoments, R.drawable.dogecoin, R.drawable.doggarlic,
+                                                  R.drawable.gingkotree, R.drawable.illusion, R.drawable.mandelbrot,
+                                                  R.drawable.mugiwara, R.drawable.tomhanks)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         winText = findViewById(R.id.winText)
 
         radioButtons = findViewById(R.id.tileType)
+
+        randomSwitch = findViewById(R.id.toggleRandom)
     }
 
     private fun gameSelector(){
@@ -60,6 +66,10 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         allImageTiles = ArrayList()
 
         val tileSize = 270
+
+        enableRandomPicture = randomSwitch.isChecked
+        if(enableRandomPicture)
+            picture = allPictures[(allPictures.indices).random()]
 
         for(i in 0..15){
             if(randomOrder[i] == 16)
