@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
 
     private var gameDone = false
 
-    private var picture: Int = R.drawable.doggarlic
+    private var picture: Int = R.drawable.illusion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             gameDone = true
             winText.text = "You Win!"
 
-            val tileView = ImageTileView(this, picture, 3, 3, 16, 16)
+            val tileView = ImageTileView(this, picture, 3, 3, 16, 15)
             tileView.addListener(this)
             val params = FrameLayout.LayoutParams(270, 270)
             params.leftMargin = 3 * 270
