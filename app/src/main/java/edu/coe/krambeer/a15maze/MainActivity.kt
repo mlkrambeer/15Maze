@@ -1,5 +1,6 @@
 package edu.coe.krambeer.a15maze
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     private var gameDone = false
 
     private var enableRandomPicture = true
-    private var picture: Int = R.drawable.gingkotree
+    private var picture: Int = R.drawable.gingkotree //default image
     private val allPictures: Array<Int> = arrayOf(R.drawable.animals, R.drawable.babby, R.drawable.chef,
                                                   R.drawable.criticalmoments, R.drawable.dogecoin, R.drawable.doggarlic,
                                                   R.drawable.gingkotree, R.drawable.illusion, R.drawable.mandelbrot,
@@ -47,6 +48,16 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         radioButtons = findViewById(R.id.tileType)
 
         randomSwitch = findViewById(R.id.toggleRandom)
+
+        val prefs = getPreferences(Context.MODE_PRIVATE)
+        picture = prefs.getInt("LAST_IMAGE", picture)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val prefs = getPreferences(Context.MODE_PRIVATE).edit()
+        prefs.putInt("LAST_IMAGE", picture)
+        prefs.apply()
     }
 
     private fun gameSelector(){
