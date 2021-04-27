@@ -31,10 +31,17 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
 
     private var enableRandomPicture = true
     private var picture: Int = R.drawable.gingkotree //default image
-    private val allPictures: Array<Int> = arrayOf(R.drawable.animals, R.drawable.babby, R.drawable.chef,
-                                                  R.drawable.criticalmoments, R.drawable.dogecoin, R.drawable.doggarlic,
-                                                  R.drawable.gingkotree, R.drawable.illusion, R.drawable.mandelbrot,
-                                                  R.drawable.mugiwara, R.drawable.tomhanks)
+    private val allPictures: Array<Int> = arrayOf(R.drawable.animals,    R.drawable.babby,           R.drawable.beatificvision,
+                                                  R.drawable.chef,       R.drawable.cliffsofdover,   R.drawable.criticalmoments,
+                                                  R.drawable.dogecoin,
+                                                  R.drawable.doggarlic,  R.drawable.ducks,           R.drawable.gingkotree,
+                                                  R.drawable.glacier,    R.drawable.illusion,        R.drawable.mandelbrot,
+                                                  R.drawable.mugiwara,   R.drawable.pamukkale,       R.drawable.pantanal,
+                                                  R.drawable.pizza,      R.drawable.pucci,           R.drawable.shiptonscave,
+                                                  R.drawable.supermoon,  R.drawable.sushi,           R.drawable.tree)
+
+    //will use this array for presentation on Friday
+    //private vale allPictures: Array<Int> = arrayOf(R.drawable.coecollege1, R.drawable.coecollege2, R.drawable.coecollege3)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

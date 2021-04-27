@@ -3,6 +3,7 @@ package edu.coe.krambeer.a15maze
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
@@ -45,8 +46,12 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
 
     init{
         setOnTouchListener(this)
-        val image = getDrawable(resources, picture, resources.newTheme())!!
+
+        val image = getDrawable(resources, picture, resources.newTheme())!! //this way is faster, but I got a crash once; said i casted a vectordrawable to bitmap drawable; hasn't crashed again even with same exact code
         val bitmap = (image as BitmapDrawable).bitmap
+
+        //val bitmap = BitmapFactory.decodeResource(resources, picture)  //this way of doing it is waaaay slower apparently
+
         val imageWidth = bitmap.width / 4
         val imageHeight = bitmap.height / 4
         var tileSize = 0
