@@ -47,8 +47,8 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
     init{
         setOnTouchListener(this)
 
-        val image = getDrawable(resources, picture, resources.newTheme())!! //this way is faster, but I got a crash once; said i casted a vectordrawable to bitmap drawable; hasn't crashed again even with same exact code
-        val bitmap = (image as BitmapDrawable).bitmap
+        val image = getDrawable(resources, picture, resources.newTheme())!!
+        val bitmap = image.toBitmap()
 
         //val bitmap = BitmapFactory.decodeResource(resources, picture)  //this way of doing it is waaaay slower apparently
 
