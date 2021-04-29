@@ -50,10 +50,17 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         val bottom = tile.getY() + tile.getSize()
         canvas!!.drawRect(left, top, right, bottom, painter)
 
-        painter.textSize = 70F
+        painter.textSize = 80F
+        painter.isFakeBoldText = true
         painter.textAlign = Paint.Align.LEFT
-        painter.strokeWidth = 5f
-        canvas.drawText(tile.getNumber().toString(), (right + left) / 2 - 25f, (top + bottom) / 2 + 25f, painter)
+        painter.style = Paint.Style.FILL
+
+        val condX: Float
+        if(tile.getNumber() < 10) // if it's a double digit number, adjust the x coordinate
+            condX = (right + left) / 2 - 25f
+        else
+            condX = (right + left) / 2 - 50f
+        canvas.drawText(tile.getNumber().toString(), condX, (top + bottom) / 2 + 25f, painter)
 
     }
 
