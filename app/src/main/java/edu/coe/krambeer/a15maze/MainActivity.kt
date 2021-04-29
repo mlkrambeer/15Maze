@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     private var gameDone = false
 
     private var enableRandomPicture = true
-    private var picture: Int = R.drawable.coecollege3 //default image
+    private var picture: Int = R.drawable.gingkotree //default image
 //    private val allPictures: Array<Int> = arrayOf(R.drawable.animals,    R.drawable.babby,           R.drawable.beatificvision,
 //                                                  R.drawable.chef,       R.drawable.cliffsofdover,   R.drawable.criticalmoments,
 //                                                  R.drawable.dogecoin,
@@ -179,7 +179,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         randomOrder = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
         blankLocation = 15
         var validSwaps = 0
-        while(validSwaps < 1000){
+        while(validSwaps < 999){  //if you do an odd number of swaps, it guarantees the puzzle won't start solved
             val nextSwap = getNextSwap()
             swap(nextSwap, blankLocation)
             blankLocation = nextSwap

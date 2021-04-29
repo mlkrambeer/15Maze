@@ -54,7 +54,7 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
 
         val imageWidth = bitmap.width / 4
         val imageHeight = bitmap.height / 4
-        var tileSize = 0
+        val tileSize: Int
         if(imageWidth < imageHeight)  //check which of the two is smaller, and use that for both dimensions; this will crop longer dimension
             tileSize = imageWidth
         else
