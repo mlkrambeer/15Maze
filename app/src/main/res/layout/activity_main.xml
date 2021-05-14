@@ -9,7 +9,8 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +23,7 @@
         android:layout_marginLeft="135dp"
         android:layout_marginTop="15dp"
         android:text=""
-        android:textSize="36sp"
+        android:textSize="36dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/container"
         tools:text="You Win!" />
@@ -43,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/new_game2"
-                android:textSize="20sp"
+                android:textSize="20dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="30dp"
@@ -65,14 +66,14 @@
                 <RadioButton
                     android:id="@+id/numbers"
                     android:text="@string/numbers"
-                    android:textSize="20sp"
+                    android:textSize="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <RadioButton
                     android:id="@+id/image"
                     android:text="@string/image"
-                    android:textSize="20sp"
+                    android:textSize="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -81,7 +82,7 @@
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/toggleRandom"
                 android:text="@string/random_image"
-                android:textSize="20sp"
+                android:textSize="20dp"
                 android:checked="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,12 +1,15 @@
 package edu.coe.krambeer.a15maze
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Build
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.RequiresApi
 import java.lang.Math.pow
 import kotlin.math.abs
 import kotlin.math.pow
@@ -39,7 +42,11 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        painter.color = Color.BLACK
+        val mode = context.resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+        if(mode == Configuration.UI_MODE_NIGHT_YES)
+            painter.color = Color.WHITE
+        else
+            painter.color = Color.BLACK
         if(isCorrectSpot())
             painter.color = Color.RED
         painter.style = Paint.Style.STROKE

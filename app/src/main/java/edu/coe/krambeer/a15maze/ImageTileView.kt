@@ -50,8 +50,6 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         val image = getDrawable(resources, picture, resources.newTheme())!!
         val bitmap = image.toBitmap()
 
-        //val bitmap = BitmapFactory.decodeResource(resources, picture)  //this way of doing it is waaaay slower apparently
-
         val imageWidth = bitmap.width / 4
         val imageHeight = bitmap.height / 4
         val tileSize: Int
