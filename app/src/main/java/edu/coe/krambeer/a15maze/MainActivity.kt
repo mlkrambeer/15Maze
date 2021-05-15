@@ -35,16 +35,17 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     private var bestTime = (-1).toLong()
     lateinit var timerTextView: TextView
     private var startTime = System.currentTimeMillis()
-    private var finishTime = System.currentTimeMillis()
     private var pauseTime = 0.toLong()
     private var resumeTime = 0.toLong()
+    private var elapsedTime = 0.toLong()  //modified by thread
     private var totalTimeDelay = 0.toLong()
     private val handler = android.os.Handler(Looper.getMainLooper())
     private val timerRunnable = object: Runnable{
         override fun run() {
             val time = System.currentTimeMillis() - startTime - totalTimeDelay
+            elapsedTime = time
             timerTextView.text = "Time: ${formattedTime(time)}"
-            handler.postDelayed(this, 500)
+            handler.postDelayed(this, 250)
         }
     }
     private var wasRunning = false
@@ -140,7 +141,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         super.onPause()
         handler.removeCallbacks(timerRunnable)
         pauseTime = System.currentTimeMillis()
-        if(!gameDone)
+        if(wasRunning)
             container.visibility = View.INVISIBLE
     }
 
@@ -315,7 +316,6 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
                 win = false
         }
         if(win){
-            finishTime = System.currentTimeMillis()
             gameDone = true
             winText.text = "You Win!"
             handler.removeCallbacks(timerRunnable)
@@ -337,7 +337,6 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
                 win = false
         }
         if(win){
-            finishTime = System.currentTimeMillis()
             gameDone = true
             winText.text = "You Win!"
 
@@ -371,9 +370,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         }
 
         if(wasRunning){
-            val winTime = finishTime - startTime - totalTimeDelay
-            if(winTime < bestTime || bestTime == (-1).toLong()){
-                bestTime = winTime
+            if(elapsedTime < bestTime || bestTime == (-1).toLong()){
+                bestTime = elapsedTime
                 bestTimeView.text = "Best: ${formattedTime(bestTime)}"
             }
         }

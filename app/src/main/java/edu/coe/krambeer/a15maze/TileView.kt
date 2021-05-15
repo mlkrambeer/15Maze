@@ -126,6 +126,11 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         return true
     }
 
+    //idea to change this: used X and Y coord to determine which of 4 possible spots the tile was moving towards, snap to where it was moving, never where it started
+    //would need to make sure that tiles which are completely surrounded never move
+    //introduces potential issue of user moving a tile when they didn't mean to, since any small movement will move the tile completely
+    //the currently implemented function requires user to move more than halfway towards destination, which sometimes results in the move
+    //not executing if they go too quickly
     fun snapToNearestSquare(view: TileView){
         val spacing = 20f
         val offset = 7f
