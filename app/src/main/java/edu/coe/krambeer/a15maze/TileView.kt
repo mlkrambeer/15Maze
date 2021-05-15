@@ -148,6 +148,13 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
                 snapYCord = i/4
             }
         }
+
+        val move: Int  //only increment move counter if moved to new position
+        if(snapXCord == view.getXCoord() && snapYCord == view.getYCoord())
+            move = 0
+        else
+            move = 1
+
         view.tile.setX(view.tile.boundedX(snapX))
         view.tile.setY(view.tile.boundedY(snapY))
         view.setPrevX(snapX)
@@ -155,7 +162,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         view.setXCoord(snapXCord)
         view.setYCoord(snapYCord)
         view.invalidate()
-        tellListener()
+
+        tellListener(move)
     }
 
     private fun moveDirection():Boolean{ //true = X, false = Y
@@ -234,8 +242,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         activity = l
     }
 
-    fun tellListener(){
-        activity.checkWinCondition()
+    fun tellListener(move:Int){
+        activity.checkWinCondition(move)
     }
 
     fun getTile():Tile{

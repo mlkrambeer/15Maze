@@ -7,4 +7,11 @@
     <string name="image">Image</string>
     <string name="new_game2">New Game</string>
     <string name="random_image">Random Image</string>
+    <string name="moves">Moves:</string>
+    <string name="time">Time:</string>
+    <string name="timers">Timers</string>
+    <string name="counters">Counters</string>
+    <string name="no_peaking">No Peaking</string>
+    <string name="moves_0">Moves: 0</string>
+    <string name="time_0_00">Time: 0:00</string>
 </resources>

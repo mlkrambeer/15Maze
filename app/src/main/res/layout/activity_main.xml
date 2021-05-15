@@ -12,8 +12,7 @@
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/winText"
@@ -28,11 +27,75 @@
         app:layout_constraintTop_toBottomOf="@+id/container"
         tools:text="You Win!" />
 
+    <LinearLayout
+        android:id="@+id/counters"
+        app:layout_constraintTop_toBottomOf="@+id/winText"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/moveNum"
+                android:textSize="20dp"
+                android:text="@string/moves_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp" />
+
+            <TextView
+                android:id="@+id/bestMoves"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Best: 80"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/time"
+                android:text="@string/time_0_00"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"/>
+
+            <TextView
+                android:id="@+id/bestTime"
+                android:textSize="20dp"
+                tools:text="Best: 1:20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@+id/winText">
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/counters">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottomHalf"
@@ -91,6 +154,18 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/toggleTimers"
+                android:text="@string/counters"
+                android:textSize="20dp"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

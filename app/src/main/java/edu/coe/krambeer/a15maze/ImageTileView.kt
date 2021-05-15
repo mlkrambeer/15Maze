@@ -139,6 +139,12 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
             }
         }
 
+        val move: Int  //only increment move counter if moved to new position
+        if(snapXCord == view.getXCoord() && snapYCord == view.getYCoord())
+            move = 0
+        else
+            move = 1
+
         view.setCurrentX(view.boundedX(snapX))
         view.setCurrentY(view.boundedY(snapY))
         view.setPrevX(snapX)
@@ -147,7 +153,8 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         view.setYCoord(snapYCord)
 
         view.invalidate()
-        tellListener()
+
+        tellListener(move)
     }
 
     private fun moveDirection():Boolean{
@@ -194,8 +201,8 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         activity = l
     }
 
-    fun tellListener(){
-        activity.checkImageWinCondition()
+    fun tellListener(move:Int){
+        activity.checkImageWinCondition(move)
     }
 
     fun getDisplaySize():Float{
