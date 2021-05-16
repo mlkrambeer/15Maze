@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
 
     private var allTiles: ArrayList<TileView> = ArrayList()
     private var allImageTiles: ArrayList<ImageTileView> = ArrayList()
+    private var activeTiles: ArrayList<MoveSwitchListener> = ArrayList()
 
     private var gameDone = false
     lateinit var moveNumView: TextView
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     lateinit var counterSwitch: SwitchCompat
     lateinit var counterContainer: LinearLayout
 
+    lateinit var fastMoveSwitch: SwitchCompat
+
     private var enableRandomPicture = true
     private var picture: Int = R.drawable.gingkotree //default image
 
@@ -63,7 +66,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
                                                   R.drawable.doggarlic,  R.drawable.ducks,           R.drawable.gingkotree,
                                                   R.drawable.glacier,    R.drawable.illusion,        R.drawable.mandelbrot,
                                                   R.drawable.mugiwara,   R.drawable.pamukkale,       R.drawable.pantanal,
-                                                  R.drawable.pizza,      R.drawable.pucci,           R.drawable.shiptonscave,
+                                                  R.drawable.pizza,      R.drawable.pucci,           R.drawable.sasuke,
+                                                  R.drawable.shiptonscave,
                                                   R.drawable.supermoon,  R.drawable.sushi,           R.drawable.tree)
 
     //mom's array
@@ -124,7 +128,14 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
                     timerTextView.text = "Time: 0:00"
                 }
             }
+        })
 
+        fastMoveSwitch = findViewById(R.id.fastMoveSwitch)
+        fastMoveSwitch.setOnCheckedChangeListener(object: CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+                for(switchListener in activeTiles)
+                    switchListener.toggleFastMove()
+            }
         })
     }
 
@@ -168,10 +179,13 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         startTime = System.currentTimeMillis()
         totalTimeDelay = 0.toLong()
 
+        handler.removeCallbacks(timerRunnable)
         if(counterSwitch.isChecked){
             handler.post(timerRunnable)
             wasRunning = true
         }
+
+        activeTiles = ArrayList()
 
         if(selection == R.id.numbers)
             newGame()
@@ -200,6 +214,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             container.addView(tileView, params)
 
             allImageTiles.add(tileView)
+            activeTiles.add(tileView)
         }
 
         for(tile1 in allImageTiles){
@@ -231,6 +246,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             container.addView(tileView)
 
             allTiles.add(tileView)
+            activeTiles.add(tileView)
 
             tileView.addListener(this)
         }
@@ -352,6 +368,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             container.addView(tileView, params)
 
             allImageTiles.add(tileView)
+            activeTiles.add(tileView)
 
             for(tile1 in allImageTiles){
                 for(tile2 in allImageTiles){

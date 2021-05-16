@@ -15,7 +15,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class TileView(context: Context?, private val tile: Tile, private var xCord: Int, var yCord: Int): View(context), View.OnTouchListener {
+class TileView(context: Context?, private val tile: Tile, private var xCord: Int, var yCord: Int): View(context), View.OnTouchListener, MoveSwitchListener {
 
     private val painter = Paint()
     private var touchOffsetX = 0f
@@ -31,6 +31,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
     private val otherTiles: ArrayList<TileView> = ArrayList()
 
     private lateinit var activity: TileViewListener
+
+    private var fastMove = false //flag for which movement scheme to use
 
     init{
         setOnTouchListener(this)
@@ -80,7 +82,10 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
         if(event.action == MotionEvent.ACTION_UP){
             directionSet = false
-            snapToNearestSquare(view)
+            if(fastMove)
+                snapToNextSquare(view)
+            else
+                snapToNearestSquare(view)
             return true
         }
 
@@ -126,11 +131,69 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         return true
     }
 
-    //idea to change this: used X and Y coord to determine which of 4 possible spots the tile was moving towards, snap to where it was moving, never where it started
-    //would need to make sure that tiles which are completely surrounded never move
-    //introduces potential issue of user moving a tile when they didn't mean to, since any small movement will move the tile completely
-    //the currently implemented function requires user to move more than halfway towards destination, which sometimes results in the move
-    //not executing if they go too quickly
+    override fun toggleFastMove(){
+        fastMove = !fastMove
+    }
+
+    //faster movement; option to just tap to move
+    fun snapToNextSquare(view: TileView){
+        val spacing = 20f
+        val offset = 7f
+
+        val currentLocation = view.getXCoord() + 4 * view.getYCoord()
+        val neighbors = getNeighbors(currentLocation)
+        var isOpen = true
+        var destination = currentLocation
+
+        for(neighbor in neighbors){
+            for(otherTile in view.otherTiles){
+                if(neighbor == (otherTile.getXCoord() + 4 * otherTile.getYCoord())){
+                    isOpen = false
+                    break
+                }
+            }
+            if(isOpen){
+                destination = neighbor
+                break
+            }
+            else
+                isOpen = true
+        }
+
+        val move: Int
+        if(destination == currentLocation)
+            move = 0
+        else
+            move = 1
+
+        val snapX = (destination % 4) * (view.tile.getSize() + spacing) + offset
+        val snapY = (destination / 4) * (view.tile.getSize() + spacing) + offset
+
+        view.tile.setX(view.tile.boundedX(snapX))
+        view.tile.setY(view.tile.boundedY(snapY))
+        view.setPrevX(snapX)
+        view.setPrevY(snapY)
+        view.setXCoord(destination % 4)
+        view.setYCoord(destination / 4)
+
+        view.invalidate()
+        tellListener(move)
+    }
+
+    private fun getNeighbors(loc:Int):ArrayList<Int>{
+        val neighbors = ArrayList<Int>()
+        if(loc > 3)
+            neighbors.add(loc - 4)
+        if(loc < 12)
+            neighbors.add(loc + 4)
+        if((loc % 4) != 3)
+            neighbors.add(loc + 1)
+        if((loc % 4) != 0)
+            neighbors.add(loc - 1)
+        return neighbors
+    }
+
+    //more error prone movement
     fun snapToNearestSquare(view: TileView){
         val spacing = 20f
         val offset = 7f

@@ -27,7 +27,7 @@ import androidx.core.view.marginLeft
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xCord: Int, private var yCord: Int, private val number: Int, private val startLoc: Int): androidx.appcompat.widget.AppCompatImageView(context!!), View.OnTouchListener {
+class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xCord: Int, private var yCord: Int, private val number: Int, private val startLoc: Int): androidx.appcompat.widget.AppCompatImageView(context!!), View.OnTouchListener, MoveSwitchListener {
     private var displaySize = 270f
 
     private var touchOffsetX = 0f
@@ -43,6 +43,8 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
     private val otherTiles: ArrayList<ImageTileView> = ArrayList()
 
     private lateinit var activity: ImageTileViewListener
+
+    private var fastMove = false //flag for which movement scheme to use
 
     init{
         setOnTouchListener(this)
@@ -75,7 +77,10 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
 
         if(action == MotionEvent.ACTION_UP){
             directionSet = false
-            snapToNearestSquare(view)
+            if(fastMove)
+                snapToNextSquare(view)
+            else
+                snapToNearestSquare(view)
             return true
         }
 
@@ -119,6 +124,66 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         return true
     }
 
+    override fun toggleFastMove(){
+        fastMove = !fastMove
+    }
+
+    fun snapToNextSquare(view: ImageTileView){
+        val currentLocation = view.getXCoord() + 4 * view.getYCoord()
+        val neighbors = getNeighbors(currentLocation)
+        var isOpen = true
+        var destination = currentLocation
+
+        for(neighbor in neighbors){
+            for(otherTile in view.otherTiles){
+                if(neighbor == (otherTile.getXCoord() + 4 * otherTile.getYCoord())){
+                    isOpen = false
+                    break
+                }
+            }
+            if(isOpen){
+                destination = neighbor
+                break
+            }
+            else
+                isOpen = true
+        }
+
+        val move: Int
+        if(destination == currentLocation)
+            move = 0
+        else
+            move = 1
+
+        val snapX = (destination % 4) * view.getDisplaySize()
+        val snapY = (destination / 4) * view.getDisplaySize()
+
+        view.setCurrentX(view.boundedX(snapX))
+        view.setCurrentY(view.boundedY(snapY))
+        view.setPrevX(snapX)
+        view.setPrevY(snapY)
+        view.setXCoord(destination % 4)
+        view.setYCoord(destination / 4)
+
+        view.invalidate()
+
+        tellListener(move)
+    }
+
+    private fun getNeighbors(loc:Int):ArrayList<Int>{
+        val neighbors = ArrayList<Int>()
+        if(loc > 3)
+            neighbors.add(loc - 4)
+        if(loc < 12)
+            neighbors.add(loc + 4)
+        if((loc % 4) != 3)
+            neighbors.add(loc + 1)
+        if((loc % 4) != 0)
+            neighbors.add(loc - 1)
+        return neighbors
+    }
+
+    //more error prone movement
     fun snapToNearestSquare(view: ImageTileView){
         var minDist = Float.MAX_VALUE
         var snapX = 0f
