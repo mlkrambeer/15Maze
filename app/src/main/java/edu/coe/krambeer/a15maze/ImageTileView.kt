@@ -28,7 +28,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xCord: Int, private var yCord: Int, private val number: Int, private val startLoc: Int): androidx.appcompat.widget.AppCompatImageView(context!!), View.OnTouchListener, MoveSwitchListener {
-    private var displaySize = 270f
+    private var displaySize = 270f //270f works
 
     private var touchOffsetX = 0f
     private var touchOffsetY = 0f
@@ -48,6 +48,8 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
 
     init{
         setOnTouchListener(this)
+        val metrics = context!!.resources.displayMetrics
+        displaySize = metrics.widthPixels.toFloat() / 4
 
         val image = getDrawable(resources, picture, resources.newTheme())!!
         val bitmap = image.toBitmap()
@@ -124,8 +126,8 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         return true
     }
 
-    override fun toggleFastMove(){
-        fastMove = !fastMove
+    override fun setFastMove(value:Boolean){
+        fastMove = value
     }
 
     fun snapToNextSquare(view: ImageTileView){

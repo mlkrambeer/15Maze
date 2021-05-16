@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.HandlerThread
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
@@ -134,7 +135,7 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         fastMoveSwitch.setOnCheckedChangeListener(object: CompoundButton.OnCheckedChangeListener{
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
                 for(switchListener in activeTiles)
-                    switchListener.toggleFastMove()
+                    switchListener.setFastMove(isChecked)
             }
         })
     }
@@ -213,6 +214,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             params.topMargin = (i/4) * tileSize
             container.addView(tileView, params)
 
+            tileView.setFastMove(fastMoveSwitch.isChecked)
+
             allImageTiles.add(tileView)
             activeTiles.add(tileView)
         }
@@ -231,7 +234,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         width = container.size
         height = container.size
 
-        val tileSize = 250f
+        val metrics = resources.displayMetrics
+        val tileSize = metrics.widthPixels.toFloat() / 4 - 20f
         val spacing = 20f
         val offset = 7f
 
@@ -244,6 +248,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             testTile.setBounds(container.right, container.bottom)
 
             container.addView(tileView)
+
+            tileView.setFastMove(fastMoveSwitch.isChecked)
 
             allTiles.add(tileView)
             activeTiles.add(tileView)
@@ -366,6 +372,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             params.leftMargin = 3 * 270
             params.topMargin = 3 * 270
             container.addView(tileView, params)
+
+            tileView.setFastMove(fastMoveSwitch.isChecked)
 
             allImageTiles.add(tileView)
             activeTiles.add(tileView)

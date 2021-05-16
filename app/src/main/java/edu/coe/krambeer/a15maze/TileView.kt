@@ -131,8 +131,8 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
         return true
     }
 
-    override fun toggleFastMove(){
-        fastMove = !fastMove
+    override fun setFastMove(value:Boolean){
+        fastMove = value
     }
 
     //faster movement; option to just tap to move
