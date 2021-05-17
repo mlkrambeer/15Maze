@@ -221,7 +221,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/fast_move"
                         android:textSize="20sp"
-                        android:checked="false"
+                        android:checked="true"
                         android:layout_gravity="center"/>
 
                 </FrameLayout>

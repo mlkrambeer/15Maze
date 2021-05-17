@@ -44,7 +44,7 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
 
     private lateinit var activity: ImageTileViewListener
 
-    private var fastMove = false //flag for which movement scheme to use
+    private var fastMove = true //flag for which movement scheme to use
 
     init{
         setOnTouchListener(this)

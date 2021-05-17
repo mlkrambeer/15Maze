@@ -32,7 +32,7 @@ class TileView(context: Context?, private val tile: Tile, private var xCord: Int
 
     private lateinit var activity: TileViewListener
 
-    private var fastMove = false //flag for which movement scheme to use
+    private var fastMove = true //flag for which movement scheme to use
 
     init{
         setOnTouchListener(this)
