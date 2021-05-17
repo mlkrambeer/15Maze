@@ -126,7 +126,10 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
                         wasRunning = false
                     }
                     counterContainer.visibility = View.INVISIBLE
-                    timerTextView.text = "Time: 0:00"
+                    if(!gameDone){
+                        moveNumView.text = "Moves: 0"
+                        timerTextView.text = "Time: 0:00"
+                    }
                 }
             }
         })
@@ -197,7 +200,8 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     private fun imageGame(){
         allImageTiles = ArrayList()
 
-        val tileSize = 270
+        val metrics = resources.displayMetrics
+        val tileSize = metrics.widthPixels / 4
 
         enableRandomPicture = randomSwitch.isChecked
         if(enableRandomPicture)
@@ -329,8 +333,10 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         if(gameDone)
             return
 
-        moveCounter += move
-        moveNumView.text = "Moves: $moveCounter"
+        if(wasRunning){
+            moveCounter += move
+            moveNumView.text = "Moves: $moveCounter"
+        }
 
         var win = true
         for(tile in allTiles){
@@ -350,8 +356,10 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         if(gameDone)
             return
 
-        moveCounter += move
-        moveNumView.text = "Moves: $moveCounter"
+        if(wasRunning){
+            moveCounter += move
+            moveNumView.text = "Moves: $moveCounter"
+        }
 
         var win = true
         for(tile in allImageTiles){
@@ -389,12 +397,12 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
     }
 
     private fun checkRecords(){
-        if(moveCounter < bestMoves || bestMoves == -1){
-            bestMoves = moveCounter
-            bestMovesView.text = "Best: $bestMoves"
-        }
-
         if(wasRunning){
+            if(moveCounter < bestMoves || bestMoves == -1){
+                bestMoves = moveCounter
+                bestMovesView.text = "Best: $bestMoves"
+            }
+
             if(elapsedTime < bestTime || bestTime == (-1).toLong()){
                 bestTime = elapsedTime
                 bestTimeView.text = "Best: ${formattedTime(bestTime)}"
