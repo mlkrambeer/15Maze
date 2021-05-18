@@ -27,7 +27,7 @@ import androidx.core.view.marginLeft
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xCord: Int, private var yCord: Int, private val number: Int, private val startLoc: Int): androidx.appcompat.widget.AppCompatImageView(context!!), View.OnTouchListener, MoveSwitchListener {
+class ImageTileView(context: Context?, @DrawableRes picture: Int?, selectedBitmap: Bitmap?, private var xCord: Int, private var yCord: Int, private val number: Int, startLoc: Int): androidx.appcompat.widget.AppCompatImageView(context!!), View.OnTouchListener, MoveSwitchListener {
     private var displaySize = 270f //270f works
 
     private var touchOffsetX = 0f
@@ -51,6 +51,13 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         val metrics = context!!.resources.displayMetrics
         displaySize = metrics.widthPixels.toFloat() / 4
 
+        if(picture != null)
+            presetImageInit(picture, startLoc)
+        else
+            selectedImageInit(selectedBitmap!!, startLoc)
+    }
+
+    private fun presetImageInit(@DrawableRes picture: Int, startLoc: Int){
         val image = getDrawable(resources, picture, resources.newTheme())!!
         val bitmap = image.toBitmap()
 
@@ -62,6 +69,23 @@ class ImageTileView(context: Context?, @DrawableRes picture: Int, private var xC
         else
             tileSize = imageHeight
         val cropped = Bitmap.createBitmap(bitmap, ((number - 1) % 4) * tileSize, ((number - 1) / 4) * tileSize, tileSize, tileSize)
+        setImageBitmap(cropped)
+
+        prevX = (startLoc % 4) * displaySize
+        prevY = (startLoc / 4) * displaySize
+
+        invalidate()
+    }
+
+    private fun selectedImageInit(selectedBitmap: Bitmap, startLoc: Int){
+        val imageWidth = selectedBitmap.width / 4
+        val imageHeight = selectedBitmap.height / 4
+        val tileSize: Int
+        if(imageWidth < imageHeight)
+            tileSize = imageWidth
+        else
+            tileSize = imageHeight
+        val cropped = Bitmap.createBitmap(selectedBitmap, ((number - 1) % 4) * tileSize, ((number - 1) / 4) * tileSize, tileSize, tileSize)
         setImageBitmap(cropped)
 
         prevX = (startLoc % 4) * displaySize

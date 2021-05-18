@@ -1,10 +1,16 @@
 package edu.coe.krambeer.a15maze
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.HandlerThread
 import android.os.Looper
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.*
@@ -73,8 +79,12 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
 
     //mom's array
 //    private val allPictures: Array<Int> = arrayOf(R.drawable.tomhanks,  R.drawable.cliffsofdover, R.drawable.criticalmoments,
-//                                                  R.drawable.pamukkale, R.drawable.pantanal,      R.drawable.gingkotree)
+//                                                  R.drawable.pamukkale, R.drawable.pantanal,      R.drawable.gingkotree,
+//                                                  R.drawable.animals,   R.drawable.mandelbrot,    R.drawable.tree)
 
+    lateinit var imageSelectButton: Button
+    val PICK_IMAGE = 42
+    var selectedImage: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,6 +151,9 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
                     switchListener.setFastMove(isChecked)
             }
         })
+
+        imageSelectButton = findViewById(R.id.imageSelect)
+        imageSelectButton.setOnClickListener { selectImage() }
     }
 
     override fun onStop() {
@@ -167,6 +180,26 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         if(wasRunning)
             handler.post(timerRunnable)
         container.visibility = View.VISIBLE
+    }
+
+    private fun selectImage(){
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, PICK_IMAGE) //PICK_IMAGE is a constant I define above
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE){ //PICK_IMAGE is a constant I define above
+            val imageUri = data!!.data
+            val contentResolver = applicationContext.contentResolver
+            val parcelFileDescriptor = contentResolver.openFileDescriptor(imageUri!!, "r")
+            val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
+            selectedImage = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            parcelFileDescriptor.close()
+
+            //deprecated
+            //selectedImage = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
+        }
     }
 
     private fun gameSelector(){
@@ -204,14 +237,20 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
         val tileSize = metrics.widthPixels / 4
 
         enableRandomPicture = randomSwitch.isChecked
-        if(enableRandomPicture)
+        if(enableRandomPicture){
             picture = allPictures[(allPictures.indices).random()]
+            selectedImage = null //enable escape from selected image game
+        }
 
         for(i in 0..15){
             if(randomOrder[i] == 16)
                 continue
 
-            val tileView = ImageTileView(this, picture, i%4, i/4, randomOrder[i], i)
+            val tileView: ImageTileView
+            if(selectedImage != null)
+                tileView = ImageTileView(this, null, selectedImage,i%4, i/4, randomOrder[i], i)
+            else
+                tileView = ImageTileView(this, picture, null, i%4, i/4, randomOrder[i], i)
             tileView.addListener(this)
             val params = FrameLayout.LayoutParams(tileSize, tileSize)
             params.leftMargin = (i%4) * tileSize
@@ -374,7 +413,11 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             checkRecords()
             wasRunning = false
 
-            val tileView = ImageTileView(this, picture, 3, 3, 16, 15)
+            val tileView: ImageTileView
+            if(selectedImage != null)
+                tileView = ImageTileView(this, null, selectedImage, 3, 3, 16, 15)
+            else
+                tileView = ImageTileView(this, picture, null, 3, 3, 16, 15)
             tileView.addListener(this)
             val params = FrameLayout.LayoutParams(270, 270)
             params.leftMargin = 3 * 270
