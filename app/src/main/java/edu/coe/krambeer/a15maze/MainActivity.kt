@@ -5,13 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.HandlerThread
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.DisplayMetrics
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
