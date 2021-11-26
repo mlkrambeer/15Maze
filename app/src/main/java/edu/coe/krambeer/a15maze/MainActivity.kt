@@ -416,9 +416,13 @@ class MainActivity : AppCompatActivity(), TileViewListener, ImageTileViewListene
             else
                 tileView = ImageTileView(this, picture, null, 3, 3, 16, 15)
             tileView.addListener(this)
-            val params = FrameLayout.LayoutParams(270, 270)
-            params.leftMargin = 3 * 270
-            params.topMargin = 3 * 270
+
+            val metrics = resources.displayMetrics
+            val tileSize = metrics.widthPixels / 4
+
+            val params = FrameLayout.LayoutParams(tileSize, tileSize)
+            params.leftMargin = 3 * tileSize
+            params.topMargin = 3 * tileSize
             container.addView(tileView, params)
 
             tileView.setFastMove(fastMoveSwitch.isChecked)
